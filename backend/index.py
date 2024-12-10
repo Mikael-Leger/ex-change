@@ -3,19 +3,12 @@ from flask_cors import CORS
 import os
 from dotenv import load_dotenv 
 import requests
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
 
 load_dotenv() 
 
-root_dir = os.path.abspath(os.path.join(os.getcwd(), '..'))
-public_folder = os.path.join(root_dir, 'public')
-logging.debug("Public folder: " + public_folder)
-
 app = Flask(__name__,
-            static_folder=public_folder,
-            template_folder=public_folder)
+            static_folder="../public",
+            template_folder="../public")
 
 CORS(app)
 
