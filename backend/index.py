@@ -6,9 +6,9 @@ import requests
 
 load_dotenv() 
 
-root_dir = os.path.abspath(os.path.join(os.getcwd(), 'public'))
-static_folder = os.path.join(root_dir, 'static')
-template_folder = os.path.join(root_dir, 'templates')
+root_dir = os.path.abspath(os.path.join(os.getcwd(), '..'))
+static_folder = os.path.join(root_dir, 'public')
+template_folder = os.path.join(root_dir, 'public')
 print("Static folder:" + static_folder)
 print("Template folder:" + template_folder)
 app = Flask(__name__,

@@ -2,8 +2,8 @@ import fs from 'fs-extra';
 import path from 'path';
 
 const distPath = path.join(process.cwd(), 'dist');
-const templatesPath = path.resolve(process.cwd(), '..', 'public', 'templates');
-const staticPath = path.resolve(process.cwd(), '..', 'public', 'static');
+const templatesPath = path.resolve(process.cwd(), '..', 'public');
+const staticPath = path.resolve(process.cwd(), '..', 'public');
 
 const indexPath = path.join(distPath, 'index.html');
 const targetIndexPath = path.join(templatesPath, 'index.html');
