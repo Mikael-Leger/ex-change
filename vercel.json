@@ -2,18 +2,25 @@
     "version": 2,
     "builds": [
         {
-            "src": "index.py",
+            "src": "frontend/package.json",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "dist"
+            }
+        },
+        {
+            "src": "backend/index.py",
             "use": "@vercel/python"
         }
     ],
     "routes": [
         {
             "src": "/static/(.*)",
-            "dest": "/templates/assets/$1"
+            "dest": "/backend/templates/$1"
         },
         {
             "src": "/(.*)",
-            "dest": "/index.py"
+            "dest": "/backend/index.py"
         }
     ]
 }

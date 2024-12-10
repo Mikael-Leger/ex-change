@@ -1,4 +1,4 @@
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, send_from_directory, render_template
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv 
@@ -6,7 +6,8 @@ import requests
 
 load_dotenv() 
 
-app = Flask(__name__, static_folder="templates/assets")
+app = Flask(__name__, static_folder="static", template_folder="templates")
+app.add_url_rule('/templates/<path:filename>', endpoint='templates', view_func=lambda filename: send_from_directory('templates', filename))
 
 CORS(app)
 
@@ -24,7 +25,8 @@ def calculResult(amount, from_rate, to_rate):
 
 @app.route("/")
 def index():
-    return send_from_directory("./templates", "index.html")
+    return render_template("index.html")
+    # return send_from_directory("./templates", "index.html")
 
 @app.route("/convert", methods=["POST"])
 def convert():
@@ -35,8 +37,8 @@ def convert():
         from_devise = data["from"]
         to_devise = data["to"]
 
-        from_rate = rates.index(from_devise)
-        to_rate = rates.index(to_devise)
+        from_rate = rates.get(from_devise)
+        to_rate = rates.get(to_devise)
 
         result = calculResult(amount, from_rate, to_rate)
 
