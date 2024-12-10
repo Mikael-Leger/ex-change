@@ -8,7 +8,7 @@ load_dotenv()
 
 app = Flask(__name__,
             static_folder="./static",
-            template_folder="../frontend/dist")
+            template_folder="../public")
 
 CORS(app)
 

@@ -26,5 +26,8 @@ dist-ssr
 # Environment variables
 .env*
 
-# Public folder
+# Public directory
 public/*
+
+# Backend static directory
+backend/static/*
