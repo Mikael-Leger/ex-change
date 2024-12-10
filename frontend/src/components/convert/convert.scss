@@ -1,0 +1,50 @@
+.convert {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 50px;
+
+    &-rates {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+
+        &-swap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+
+    &-popup {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        position: absolute;
+
+        min-width: 250px;
+        min-height: 50px;
+        max-width: 500px;
+        padding: 30px;
+        border-radius: 15px;
+        background-color: #424141;
+        color: white;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+        &-rate {
+            &:hover {
+                cursor: pointer;
+                text-decoration: underline;
+            }
+        }
+    }
+}
