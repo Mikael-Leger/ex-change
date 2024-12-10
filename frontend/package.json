@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "set PUBLIC_URL=/static && tsc -b && vite build",
-    "postbuild": "node scripts/postbuild.mjs",
+    "build": "tsc -b && vite build",
+    "postbuild": "node scripts/update-paths.mjs && node scripts/move-dist.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },

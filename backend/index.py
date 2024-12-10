@@ -6,8 +6,12 @@ import requests
 
 load_dotenv() 
 
-app = Flask(__name__, static_folder="static", template_folder="templates")
-app.add_url_rule('/templates/<path:filename>', endpoint='templates', view_func=lambda filename: send_from_directory('templates', filename))
+root_dir = os.path.abspath(os.path.join(os.getcwd(), '..'))
+static_folder = os.path.join(root_dir, 'public', 'static')
+template_folder = os.path.join(root_dir, 'public', 'templates')
+app = Flask(__name__,
+            static_folder=static_folder,
+            template_folder=template_folder)
 
 CORS(app)
 
@@ -26,7 +30,6 @@ def calculResult(amount, from_rate, to_rate):
 @app.route("/")
 def index():
     return render_template("index.html")
-    # return send_from_directory("./templates", "index.html")
 
 @app.route("/convert", methods=["POST"])
 def convert():
