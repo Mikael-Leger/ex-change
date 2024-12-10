@@ -7,13 +7,11 @@ import requests
 load_dotenv() 
 
 root_dir = os.path.abspath(os.path.join(os.getcwd(), '..'))
-static_folder = os.path.join(root_dir, 'public')
-template_folder = os.path.join(root_dir, 'public')
-print("Static folder:" + static_folder)
-print("Template folder:" + template_folder)
+public_folder = os.path.join(root_dir, 'public')
+print("Public folder:" + public_folder)
 app = Flask(__name__,
-            static_folder=static_folder,
-            template_folder=template_folder)
+            static_folder=public_folder,
+            template_folder=public_folder)
 
 CORS(app)
 
