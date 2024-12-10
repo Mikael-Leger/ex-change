@@ -15,7 +15,7 @@ function App() {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         };
-        fetch('http://127.0.0.1:5000/api', requestOptions)
+        fetch('/api', requestOptions)
             .then(response => response.json())
             .then(json => {
                 setApiUrl("API: " + json.api_url);

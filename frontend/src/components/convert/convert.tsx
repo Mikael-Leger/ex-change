@@ -74,12 +74,10 @@ export default function Convert() {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         };
-        fetch('http://127.0.0.1:5000/rates', requestOptions)
+        fetch('/rates', requestOptions)
             .then(response => response.json())
             .then(json => {
                 setRates(json);
-                // const ratesData = Object.keys(json).map(key => key);
-                // setRates(ratesData);
             });
     }
 
@@ -112,7 +110,7 @@ export default function Convert() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ amount: data.amount, from: data.from, to: data.to, rates })
         };
-        fetch('http://127.0.0.1:5000/convert', requestOptions)
+        fetch('/convert', requestOptions)
             .then(response => response.json())
             .then(json => {
                 setResult(`${json.result.toFixed(2)} ${data.to}`);
