@@ -1,0 +1,16 @@
+[project]
+name = "ex-change-backend"
+version = "1.0.0"
+requires-python = ">=3.12"
+dependencies = [
+    "Flask==3.1.0",
+    "Flask-Cors==5.0.0",
+    "python-dotenv==1.0.1",
+    "requests==2.27.1",
+]
+
+# Tells Vercel the Flask `app` instance lives in backend/index.py.
+# The frontend build command is defined in vercel.json (it takes precedence).
+# https://vercel.com/docs/frameworks/backend/flask
+[tool.vercel]
+entrypoint = "backend.index:app"
