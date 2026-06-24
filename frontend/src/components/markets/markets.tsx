@@ -1,5 +1,7 @@
+import { HiPlus, HiXMark } from "react-icons/hi2";
+
 import Flag from "../flag/flag";
-import { nameFor, symbolFor, POPULAR } from "../../data/currencies";
+import { nameFor, symbolFor } from "../../data/currencies";
 import { convertAmount, formatMoney, formatRate } from "../../utils/format";
 
 import "./markets.scss";
@@ -9,23 +11,29 @@ interface MarketsProps {
     from: string;
     to: string;
     amount: number;
+    watchlist: string[];
+    onAdd: () => void;
+    onRemove: (code: string) => void;
 }
 
-export default function Markets({ rates, from, to, amount }: MarketsProps) {
+export default function Markets({ rates, from, to, amount, watchlist, onAdd, onRemove }: MarketsProps) {
     if (!from || !rates[from]) return null;
 
-    const targets = POPULAR.filter((code) => code !== from && rates[code]);
-    if (targets.length === 0) return null;
-
+    const targets = watchlist.filter((code) => code !== from && rates[code]);
     const base = Number.isFinite(amount) && amount > 0 ? amount : 1;
 
     return (
         <section className="markets">
             <header className="markets__head">
                 <span className="markets__title">Markets</span>
-                <span className="markets__sub">
-                    {symbolFor(from)}{formatMoney(base)} {from}
-                </span>
+                <div className="markets__head-right">
+                    <span className="markets__sub">
+                        {symbolFor(from)}{formatMoney(base)} {from}
+                    </span>
+                    <button type="button" className="markets__add" onClick={onAdd} aria-label="Add currency">
+                        <HiPlus />
+                    </button>
+                </div>
             </header>
 
             <ul className="markets__list">
@@ -49,9 +57,23 @@ export default function Markets({ rates, from, to, amount }: MarketsProps) {
                                 </span>
                                 <span className="markets__rate">1 {from} = {formatRate(unit)}</span>
                             </span>
+                            <button
+                                type="button"
+                                className="markets__remove"
+                                onClick={() => onRemove(code)}
+                                aria-label={`Remove ${code}`}
+                            >
+                                <HiXMark />
+                            </button>
                         </li>
                     );
                 })}
+
+                {targets.length === 0 && (
+                    <li className="markets__empty">
+                        No currencies yet — tap <HiPlus /> to add one.
+                    </li>
+                )}
             </ul>
         </section>
     );

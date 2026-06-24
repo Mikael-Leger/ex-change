@@ -3,10 +3,16 @@
 
     &__head {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         justify-content: space-between;
         margin-bottom: 12px;
         padding: 0 4px;
+    }
+
+    &__head-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     &__title {
@@ -22,6 +28,26 @@
         font-weight: 600;
         color: var(--text-1);
         font-variant-numeric: tabular-nums;
+    }
+
+    &__add {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1px solid var(--glass-border-soft);
+        background: var(--glass-bg);
+        color: var(--text-1);
+        font-size: 1.05rem;
+        transition: background 0.18s, color 0.18s, transform 0.18s, border-color 0.18s;
+
+        &:hover {
+            background: var(--glass-bg-strong);
+            color: var(--text-0);
+            border-color: color-mix(in srgb, var(--aurora-cyan) 55%, transparent);
+            transform: scale(1.08);
+        }
     }
 
     &__list {
@@ -97,6 +123,44 @@
         font-size: 0.72rem;
         color: var(--text-2);
         font-variant-numeric: tabular-nums;
+    }
+
+    &__remove {
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        width: 22px;
+        height: 22px;
+        margin-left: -2px;
+        border-radius: 50%;
+        border: none;
+        background: transparent;
+        color: var(--text-2);
+        font-size: 1rem;
+        transition: background 0.15s, color 0.15s, opacity 0.15s;
+
+        &:hover {
+            background: color-mix(in srgb, var(--down) 18%, transparent);
+            color: var(--down);
+        }
+    }
+
+    // Reveal the remove control on hover where hover is available; always show
+    // it on touch devices (no hover state to trigger it).
+    @media (hover: hover) {
+        &__remove { opacity: 0; }
+        &__row:hover &__remove { opacity: 1; }
+    }
+
+    &__empty {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 24px 12px;
+        color: var(--text-2);
+        font-size: 0.86rem;
+
+        svg { font-size: 1rem; vertical-align: middle; }
     }
 }
 

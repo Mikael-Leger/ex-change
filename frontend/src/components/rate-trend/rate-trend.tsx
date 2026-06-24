@@ -102,23 +102,29 @@ export default function RateTrend({ from, to }: RateTrendProps) {
 
                 {path && stats && (
                     <>
-                        <svg
-                            className="rate-trend__chart"
-                            viewBox="0 0 100 32"
-                            preserveAspectRatio="none"
-                            role="img"
-                            aria-label={`${from} to ${to} rate over ${days} days`}
-                        >
-                            <defs>
-                                <linearGradient id={`fill-${tone}`} x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor="currentColor" stopOpacity="0.32" />
-                                    <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-                                </linearGradient>
-                            </defs>
-                            <path className="rate-trend__area" d={path.area} fill={`url(#fill-${tone})`} />
-                            <path className="rate-trend__line" d={path.line} />
-                            <circle className="rate-trend__dot" cx={path.last[0]} cy={path.last[1]} r="1.8" />
-                        </svg>
+                        <div className="rate-trend__chart-wrap">
+                            <svg
+                                className="rate-trend__chart"
+                                viewBox="0 0 100 32"
+                                preserveAspectRatio="none"
+                                role="img"
+                                aria-label={`${from} to ${to} rate over ${days} days`}
+                            >
+                                <defs>
+                                    <linearGradient id={`fill-${tone}`} x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="currentColor" stopOpacity="0.32" />
+                                        <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+                                    </linearGradient>
+                                </defs>
+                                <path className="rate-trend__area" d={path.area} fill={`url(#fill-${tone})`} />
+                                <path className="rate-trend__line" d={path.line} pathLength={100} />
+                            </svg>
+                            {/* Dot as HTML so the non-uniform SVG stretch doesn't flatten it. */}
+                            <span
+                                className="rate-trend__dot"
+                                style={{ top: `${(path.last[1] / 32) * 100}%` }}
+                            />
+                        </div>
 
                         <div className={`rate-trend__change tone-${tone}`}>
                             {stats.up ? <HiArrowTrendingUp /> : <HiArrowTrendingDown />}

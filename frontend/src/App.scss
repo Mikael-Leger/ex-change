@@ -132,8 +132,9 @@
 }
 
 .app__tagline {
-    margin-top: 14px;
-    display: inline-flex;
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
     align-items: center;
     gap: 10px;
     color: var(--text-2);

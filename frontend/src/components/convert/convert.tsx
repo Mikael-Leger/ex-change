@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { HiArrowsRightLeft } from "react-icons/hi2";
 
 import Input from "../input/input";
@@ -6,12 +7,12 @@ import CurrencyButton from "../currency-button/currency-button";
 import CurrencyPicker from "../currency-picker/currency-picker";
 import RateTrend from "../rate-trend/rate-trend";
 import Markets from "../markets/markets";
-import { symbolFor } from "../../data/currencies";
+import { symbolFor, POPULAR } from "../../data/currencies";
 import { convertAmount, formatMoney, formatRate } from "../../utils/format";
 
 import "./convert.scss";
 
-type Side = "from" | "to";
+type PickerMode = "from" | "to" | "markets";
 
 const DEFAULTS = { from: "USD", to: "EUR", amount: "1" };
 
@@ -19,6 +20,19 @@ const DEFAULTS = { from: "USD", to: "EUR", amount: "1" };
 function saved(key: keyof typeof DEFAULTS): string {
     const v = localStorage.getItem(key);
     return v === null || v === "" ? DEFAULTS[key] : v;
+}
+
+function savedWatchlist(): string[] {
+    const raw = localStorage.getItem("watchlist");
+    if (raw) {
+        try {
+            const arr = JSON.parse(raw);
+            if (Array.isArray(arr) && arr.every((c) => typeof c === "string")) return arr;
+        } catch {
+            // fall through to default
+        }
+    }
+    return POPULAR;
 }
 
 export default function Convert() {
@@ -29,7 +43,8 @@ export default function Convert() {
     const [from, setFrom] = useState(() => saved("from"));
     const [to, setTo] = useState(() => saved("to"));
     const [amount, setAmount] = useState(() => saved("amount"));
-    const [picker, setPicker] = useState<Side | null>(null);
+    const [watchlist, setWatchlist] = useState<string[]>(savedWatchlist);
+    const [picker, setPicker] = useState<PickerMode | null>(null);
 
     // Load live rates once; drop any saved code the API no longer provides.
     useEffect(() => {
@@ -55,6 +70,9 @@ export default function Convert() {
     useEffect(() => {
         localStorage.setItem("amount", amount);
     }, [amount]);
+    useEffect(() => {
+        localStorage.setItem("watchlist", JSON.stringify(watchlist));
+    }, [watchlist]);
 
     const amountNum = parseFloat(amount) || 0;
 
@@ -85,14 +103,27 @@ export default function Convert() {
         } else if (picker === "to") {
             if (code === from) setFrom(to);
             setTo(code);
+        } else if (picker === "markets") {
+            setWatchlist((w) => (w.includes(code) ? w : [...w, code]));
         }
         setPicker(null);
+    };
+
+    const removeFromWatchlist = (code: string) => {
+        setWatchlist((w) => w.filter((c) => c !== code));
     };
 
     const swap = () => {
         setFrom(to);
         setTo(from);
     };
+
+    // For the markets picker, only offer currencies not already shown.
+    const pickerCodes =
+        picker === "markets" ? codes.filter((c) => c !== from && !watchlist.includes(c)) : codes;
+    const pickerTitle =
+        picker === "from" ? "Convert from" : picker === "to" ? "Convert to" : "Add to markets";
+    const pickerSelected = picker === "from" ? from : picker === "to" ? to : "";
 
     if (error) {
         return (
@@ -163,18 +194,28 @@ export default function Convert() {
             </div>
 
             <div className="card converter__markets">
-                <Markets rates={rates} from={from} to={to} amount={amountNum} />
+                <Markets
+                    rates={rates}
+                    from={from}
+                    to={to}
+                    amount={amountNum}
+                    watchlist={watchlist}
+                    onAdd={() => setPicker("markets")}
+                    onRemove={removeFromWatchlist}
+                />
             </div>
 
-            {picker && (
-                <CurrencyPicker
-                    title={picker === "from" ? "Convert from" : "Convert to"}
-                    codes={codes}
-                    selected={picker === "from" ? from : to}
-                    onSelect={selectCurrency}
-                    onClose={() => setPicker(null)}
-                />
-            )}
+            {picker &&
+                createPortal(
+                    <CurrencyPicker
+                        title={pickerTitle}
+                        codes={pickerCodes}
+                        selected={pickerSelected}
+                        onSelect={selectCurrency}
+                        onClose={() => setPicker(null)}
+                    />,
+                    document.body,
+                )}
         </div>
     );
 }
