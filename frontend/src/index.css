@@ -1,68 +1,99 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* Type */
+  --font-display: "Clash Display", "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Satoshi", ui-sans-serif, system-ui, sans-serif;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Canvas */
+  --bg-0: #05060f;
+  --bg-1: #0a0e22;
 
+  /* Aurora accents */
+  --aurora-teal: #1fd1a0;
+  --aurora-cyan: #22d3ee;
+  --aurora-violet: #7c5cff;
+  --aurora-rose: #ff5d9e;
+  --aurora-gold: #ffd166;
+
+  /* Glass surface */
+  --glass-bg: rgba(255, 255, 255, 0.055);
+  --glass-bg-strong: rgba(255, 255, 255, 0.09);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-border-soft: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.35);
+
+  /* Text */
+  --text-0: #f3f5ff;
+  --text-1: #b7bee0;
+  --text-2: #7a82ac;
+
+  /* Trend */
+  --up: #34e7b0;
+  --down: #ff6b81;
+
+  --radius: 28px;
+  --radius-sm: 16px;
+  --shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.85), 0 8px 28px -12px rgba(0, 0, 0, 0.6);
+
+  color-scheme: dark;
+  font-family: var(--font-body);
+  color: var(--text-0);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+* {
+  box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  padding: 0;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+body {
+  background: var(--bg-0);
+  color: var(--text-0);
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  color: inherit;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+input {
+  font-family: inherit;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--aurora-violet) 55%, transparent);
+  color: #fff;
+}
+
+/* Slim, theme-matched scrollbar for picker / markets lists */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.26);
+  background-clip: padding-box;
 }

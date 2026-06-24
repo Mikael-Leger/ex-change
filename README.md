@@ -1,3 +1,15 @@
+# EX·change
+
+A modern, glassmorphism currency converter with live rates, historical trends and a multi-currency markets view.
+
+## Features
+- **Live conversion** — instant, client-side conversion (no round-trip per keystroke) using rates fetched once on load.
+- **Searchable currency picker** — type-to-filter by code or name, each with a country flag.
+- **Rate trend + sparkline** — 7 / 30 / 90-day historical chart with the period change %, served by `/history`.
+- **Markets panel** — convert the same amount into several popular currencies at once.
+- **Glassmorphism UI** — animated aurora background, frosted-glass cards, fully responsive.
+- Selection (from / to / amount) persists in `localStorage`.
+
 # Versions
 
 ## Frontend
@@ -20,7 +32,8 @@ API_KEY=YOUR-API-KEY
 
 Current API url used is "https://api.freecurrencyapi.com"
 
-Install dependencies and start servers:
+### Production-style (single Flask server)
+Build the frontend into Flask's static dir, then run Flask (serves everything on one origin):
 ```bash
 cd ./frontend
 npm install
@@ -29,6 +42,20 @@ cd ../backend
 pip install -r ./requirements.txt
 python ./index.py
 ```
+
+### Dev mode (hot reload)
+Run the backend and the Vite dev server together — Vite proxies the API routes
+(`/api`, `/rates`, `/convert`, `/history`) to Flask on `:5000`:
+```bash
+cd ./backend && python ./index.py      # terminal 1 — Flask on :5000
+cd ./frontend && npm run dev            # terminal 2 — Vite on :5173
+```
+
+## API routes (backend)
+- `GET  /rates` — latest rates (freecurrencyapi).
+- `POST /convert` — server-side conversion helper.
+- `GET  /history?from=USD&to=EUR&days=30` — historical series for the sparkline (ECB data via frankfurter.app; key-less). Returns `{ "history": [] }` for unsupported pairs so the UI degrades gracefully.
+- `GET  /api` — reports the configured rates API URL.
 
 ## Vercel
 Current version on Vercel is [EX-change](https://ex-change-git-main-mikaellegers-projects.vercel.app/)

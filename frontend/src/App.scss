@@ -1,65 +1,217 @@
-#root {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
-}
+/* ---------------------------------------------------------------- *
+ *  App shell — aurora canvas, grain overlay, header / footer
+ * ---------------------------------------------------------------- */
 
-.logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-}
-.logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-    filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    a:nth-of-type(2) .logo {
-        animation: logo-spin infinite 20s linear;
-    }
-}
-
-body {
-    background-color: #242424;
-}
-
-.App {
+.app {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
-    gap: 16vh;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(28px, 5vh, 56px);
+    padding: clamp(24px, 5vw, 56px) 20px;
+}
 
-    &-title {
-        > * {
-            display: inline-block;
-        }
+/* --- Aurora background ------------------------------------------- */
 
-        &-1 {
-            font-size: 3em;
-            color: #767b8b;
-        }
+.aurora {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    background:
+        radial-gradient(120% 90% at 50% -10%, #131a3a 0%, transparent 60%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 70%);
 
-        &-2 {
-            font-size: 2em;
-        }
+    &__blob {
+        position: absolute;
+        width: 60vmax;
+        height: 60vmax;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.55;
+        mix-blend-mode: screen;
+        will-change: transform;
     }
 
-    &-footer {
-        color: #767b8b;
+    &__blob--1 {
+        top: -22vmax;
+        left: -12vmax;
+        background: radial-gradient(circle at 30% 30%, var(--aurora-violet), transparent 65%);
+        animation: drift-1 22s ease-in-out infinite alternate;
+    }
+    &__blob--2 {
+        top: -10vmax;
+        right: -16vmax;
+        background: radial-gradient(circle at 70% 30%, var(--aurora-cyan), transparent 65%);
+        animation: drift-2 26s ease-in-out infinite alternate;
+    }
+    &__blob--3 {
+        bottom: -26vmax;
+        left: 10vmax;
+        background: radial-gradient(circle at 40% 60%, var(--aurora-teal), transparent 65%);
+        animation: drift-3 30s ease-in-out infinite alternate;
+    }
+    &__blob--4 {
+        bottom: -22vmax;
+        right: -10vmax;
+        background: radial-gradient(circle at 60% 60%, var(--aurora-rose), transparent 60%);
+        animation: drift-4 24s ease-in-out infinite alternate;
+        opacity: 0.4;
+    }
+}
+
+@keyframes drift-1 {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to   { transform: translate3d(14vmax, 10vmax, 0) scale(1.18); }
+}
+@keyframes drift-2 {
+    from { transform: translate3d(0, 0, 0) scale(1.05); }
+    to   { transform: translate3d(-12vmax, 14vmax, 0) scale(0.9); }
+}
+@keyframes drift-3 {
+    from { transform: translate3d(0, 0, 0) scale(0.95); }
+    to   { transform: translate3d(10vmax, -12vmax, 0) scale(1.2); }
+}
+@keyframes drift-4 {
+    from { transform: translate3d(0, 0, 0) scale(1.1); }
+    to   { transform: translate3d(-14vmax, -8vmax, 0) scale(0.95); }
+}
+
+/* --- Grain overlay ---------------------------------------------- */
+
+.grain {
+    position: fixed;
+    inset: -50%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain-shift 8s steps(6) infinite;
+}
+
+@keyframes grain-shift {
+    0%   { transform: translate(0, 0); }
+    50%  { transform: translate(-4%, 3%); }
+    100% { transform: translate(3%, -2%); }
+}
+
+/* --- Header ------------------------------------------------------ */
+
+.app__header {
+    text-align: center;
+    animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.wordmark {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    font-size: clamp(2.6rem, 8vw, 4.4rem);
+    display: inline-flex;
+    align-items: baseline;
+
+    &__ex {
+        background: linear-gradient(120deg, var(--aurora-cyan), var(--aurora-violet) 55%, var(--aurora-rose));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        filter: drop-shadow(0 6px 24px rgba(124, 92, 255, 0.35));
+    }
+    &__dot {
+        color: var(--aurora-gold);
+        padding: 0 0.04em;
+    }
+    &__change {
+        color: var(--text-0);
+        font-weight: 500;
+    }
+}
+
+.app__tagline {
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-2);
+    font-size: 0.92rem;
+    letter-spacing: 0.01em;
+}
+
+.live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 11px 5px 9px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--up) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--up) 35%, transparent);
+    color: var(--up);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+
+    &__pulse {
+        position: relative;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--up);
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: var(--up);
+            opacity: 0.5;
+            animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+    }
+}
+
+@keyframes ping {
+    0%   { transform: scale(0.6); opacity: 0.6; }
+    80%, 100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* --- Footer ------------------------------------------------------ */
+
+.app__footer {
+    text-align: center;
+    color: var(--text-2);
+    font-size: 0.82rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    animation: rise 0.7s 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+    a {
+        color: var(--text-1);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.2s, color 0.2s;
+
+        &:hover {
+            color: var(--text-0);
+            border-color: var(--aurora-cyan);
+        }
+    }
+}
+
+@keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .aurora__blob,
+    .grain,
+    .live-badge__pulse::after {
+        animation: none !important;
     }
 }

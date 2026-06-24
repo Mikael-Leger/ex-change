@@ -1,10 +1,11 @@
 from flask import Flask, request, send_from_directory, render_template
 from flask_cors import CORS
 import os
-from dotenv import load_dotenv 
+from datetime import date, timedelta
+from dotenv import load_dotenv
 import requests
 
-load_dotenv() 
+load_dotenv()
 
 app = Flask(__name__,
             static_folder="./static",
@@ -15,6 +16,9 @@ CORS(app)
 api_url = os.getenv("API_URL")
 api_key = os.getenv("API_KEY")
 
+# Free, key-less ECB time-series API used only for the historical sparkline.
+HISTORY_API = "https://api.frankfurter.app"
+
 def getCurrentRates():
     res = requests.get(api_url + "/v1/latest?apikey=" + api_key)
     json = res.json()
@@ -23,6 +27,29 @@ def getCurrentRates():
 def calculResult(amount, from_rate, to_rate):
     base = amount / from_rate
     return base * to_rate
+
+def getHistory(from_devise, to_devise, days):
+    # Same currency -> flat line at parity, no external call needed.
+    if from_devise == to_devise:
+        today = date.today()
+        return [
+            {"date": (today - timedelta(days=d)).isoformat(), "rate": 1.0}
+            for d in range(days, -1, -1)
+        ]
+
+    end = date.today()
+    start = end - timedelta(days=days)
+    url = f"{HISTORY_API}/{start.isoformat()}..{end.isoformat()}"
+    res = requests.get(url, params={"from": from_devise, "to": to_devise}, timeout=10)
+    res.raise_for_status()
+    rates = res.json().get("rates", {})
+
+    series = [
+        {"date": day, "rate": values[to_devise]}
+        for day, values in sorted(rates.items())
+        if to_devise in values
+    ]
+    return series
 
 @app.route("/")
 def index():
@@ -49,6 +76,26 @@ def convert():
 @app.route("/rates", methods=["GET"])
 def rates():
     return getCurrentRates()
+
+@app.route("/history", methods=["GET"])
+def history():
+    from_devise = request.args.get("from")
+    to_devise = request.args.get("to")
+    try:
+        days = int(request.args.get("days", 30))
+    except ValueError:
+        days = 30
+    days = max(7, min(days, 365))
+
+    if not from_devise or not to_devise:
+        return {"error": "Missing 'from' or 'to'"}, 400
+
+    try:
+        return {"history": getHistory(from_devise, to_devise, days)}
+    except requests.RequestException:
+        # History is a non-critical enhancement: never fail the request,
+        # the frontend simply hides the sparkline when the series is empty.
+        return {"history": []}
 
 @app.route("/api", methods=["GET"])
 def api():
