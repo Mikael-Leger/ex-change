@@ -22,9 +22,9 @@ A modern, glassmorphism currency converter with live rates, historical trends an
 - Flask: 3.1.0
 
 # Architecture
-- **Frontend** — a Vite/React SPA. All conversion happens client-side from a single `/rates` fetch. Built into `./public` (served from the CDN).
+- **Frontend** — a Vite/React SPA. All conversion happens client-side from a single `/rates` fetch.
 - **Backend** — an API-only Flask app at [`backend/index.py`](backend/index.py) (`/rates`, `/convert`, `/history`, `/api`). It does **not** serve the SPA.
-- On **Vercel** the SPA is served statically from `public/` and the Flask `app` (declared in [`pyproject.toml`](pyproject.toml) → `backend.index:app`) handles the API routes. The frontend build runs via the `buildCommand` in [`vercel.json`](vercel.json).
+- On **Vercel** ([`vercel.json`](vercel.json)) two builders run: `@vercel/static-build` (root [`package.json`](package.json) → builds the SPA to `frontend/dist`, served from the CDN) and `@vercel/python` (the Flask function). The API paths route to the function; everything else falls back to the SPA's `index.html`.
 
 # Get started
 
@@ -39,8 +39,8 @@ Get a free key at https://freecurrencyapi.com. Without it, `/rates` returns a 50
 ## Run locally (hot reload)
 Two terminals — Vite proxies the API routes to Flask on `:5000`:
 ```bash
-pip install -r requirements.txt && python backend/index.py   # Flask API on :5000
-cd frontend && npm install && npm run dev                     # SPA on :5173
+pip install -r backend/requirements.txt && python backend/index.py   # Flask API on :5000
+cd frontend && npm install && npm run dev                             # SPA on :5173
 ```
 Open http://localhost:5173.
 
@@ -51,8 +51,9 @@ Open http://localhost:5173.
 - `GET  /api` — reports the configured rates API URL.
 
 ## Deploy (Vercel)
-Follows Vercel's [Flask runtime](https://vercel.com/docs/frameworks/backend/flask): the build command compiles the SPA into `public/` (served by the CDN) and the Flask `app` becomes a single function for the API routes.
+Push to the connected Git repo and Vercel builds from [`vercel.json`](vercel.json). Requirements:
 
-1. **Root Directory** must be the repo root (Settings → General → Root Directory = `./`).
-2. Add env vars **`API_URL`** = `https://api.freecurrencyapi.com` and **`API_KEY`** in Settings → Environment Variables.
-3. Redeploy.
+1. **Root Directory** = repo root (Settings → General → Root Directory = `./`).
+2. Env vars **`API_URL`** = `https://api.freecurrencyapi.com` and **`API_KEY`** set for the Production environment (Settings → Environment Variables).
+
+> Because `vercel.json` declares an explicit `builds` array, the dashboard Framework Preset / Output Directory settings are ignored.

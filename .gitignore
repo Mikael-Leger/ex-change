@@ -31,3 +31,15 @@ public/*
 
 # Backend static directory
 backend/static/*
+.vercel
+
+# Vercel local python build cache
+.vercel_python_packages
+
+# Local `vercel build` (CLI) artifacts
+/node_modules
+/package-lock.json
+backend/.python-version
+backend/pyproject.toml
+backend/uv.lock
+.vercel/python
