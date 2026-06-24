@@ -4,9 +4,9 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/static/',
+  base: '/',
   // In dev, proxy the API routes to the Flask backend (python ./index.py -> :5000)
-  // so `npm run dev` works end-to-end without building into Flask's static dir.
+  // so `npm run dev` works end-to-end against the local API.
   server: {
     proxy: {
       '/api': 'http://localhost:5000',

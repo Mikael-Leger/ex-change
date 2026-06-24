@@ -1,4 +1,4 @@
-from flask import Flask, request, send_from_directory, render_template
+from flask import Flask, request
 from flask_cors import CORS
 import os
 from datetime import date, timedelta
@@ -7,9 +7,9 @@ import requests
 
 load_dotenv()
 
-app = Flask(__name__,
-            static_folder="./static",
-            template_folder="../public")
+# API-only Flask app. On Vercel the React SPA is served as static files by
+# @vercel/static-build; only the API routes below are routed to this function.
+app = Flask(__name__)
 
 CORS(app)
 
@@ -20,9 +20,9 @@ api_key = os.getenv("API_KEY")
 HISTORY_API = "https://api.frankfurter.app"
 
 def getCurrentRates():
-    res = requests.get(api_url + "/v1/latest?apikey=" + api_key)
-    json = res.json()
-    return json["data"]
+    res = requests.get(f"{api_url}/v1/latest?apikey={api_key}", timeout=10)
+    res.raise_for_status()
+    return res.json()["data"]
 
 def calculResult(amount, from_rate, to_rate):
     base = amount / from_rate
@@ -51,9 +51,14 @@ def getHistory(from_devise, to_devise, days):
     ]
     return series
 
-@app.route("/")
-def index():
-    return render_template("index.html")
+@app.route("/rates", methods=["GET"])
+def rates():
+    if not api_url or not api_key:
+        return {"error": "Rates API is not configured (set API_URL and API_KEY)."}, 503
+    try:
+        return getCurrentRates()
+    except requests.RequestException:
+        return {"error": "Upstream rates API is unavailable."}, 502
 
 @app.route("/convert", methods=["POST"])
 def convert():
@@ -70,12 +75,8 @@ def convert():
         result = calculResult(amount, from_rate, to_rate)
 
         return {"result": result}
-    except ValueError:
+    except (ValueError, TypeError, KeyError):
         return {"error": "Invalid input"}, 400
-
-@app.route("/rates", methods=["GET"])
-def rates():
-    return getCurrentRates()
 
 @app.route("/history", methods=["GET"])
 def history():
