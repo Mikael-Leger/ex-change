@@ -1,107 +1,124 @@
 .markets {
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 
     &__head {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
-        margin-bottom: 12px;
-        padding: 0 4px;
-    }
-
-    &__head-right {
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        gap: 12px;
     }
 
     &__title {
-        font-size: 0.72rem;
+        margin: 0;
+        color: var(--navy);
+        font-size: 1.15rem;
         font-weight: 700;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: var(--text-2);
     }
 
     &__sub {
+        color: var(--text-2);
         font-size: 0.82rem;
-        font-weight: 600;
-        color: var(--text-1);
         font-variant-numeric: tabular-nums;
     }
 
     &__add {
-        display: grid;
-        place-items: center;
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        border: 1px solid var(--glass-border-soft);
-        background: var(--glass-bg);
-        color: var(--text-1);
-        font-size: 1.05rem;
-        transition: background 0.18s, color 0.18s, transform 0.18s, border-color 0.18s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 32px;
+        padding: 0 12px;
+        border: 1.5px solid var(--pink);
+        border-radius: var(--radius);
+        background: none;
+        color: var(--pink);
+        font-size: 0.82rem;
+        font-weight: 700;
+        transition: background-color 0.2s, color 0.2s;
 
         &:hover {
-            background: var(--glass-bg-strong);
-            color: var(--text-0);
-            border-color: color-mix(in srgb, var(--aurora-cyan) 55%, transparent);
-            transform: scale(1.08);
+            background: var(--pink);
+            color: #fff;
         }
     }
 
     &__list {
-        list-style: none;
         margin: 0;
         padding: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
+        list-style: none;
+        border-top: 1px solid var(--line-soft);
     }
 
     &__row {
+        position: relative;
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 11px 12px;
-        border-radius: 14px;
-        border: 1px solid transparent;
-        transition: background 0.2s, border-color 0.2s;
-        animation: row-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+        border-bottom: 1px solid var(--line-soft);
+        animation: row-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 
-        &:hover { background: var(--glass-bg); }
+        /* The current target: a pink rule on the card's left edge. */
+        &::before {
+            content: "";
+            position: absolute;
+            left: -24px;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: var(--pink);
+            transform: scaleY(0);
+            transition: transform 0.25s;
+        }
 
-        &.is-active {
-            background: color-mix(in srgb, var(--aurora-cyan) 12%, transparent);
-            border-color: color-mix(in srgb, var(--aurora-cyan) 35%, transparent);
+        &.is-active::before {
+            transform: scaleY(1);
+        }
+
+        &:hover .markets__remove,
+        &:focus-within .markets__remove {
+            opacity: 1;
         }
     }
 
+    &__pick {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 0;
+        border: 0;
+        background: none;
+        text-align: left;
+    }
+
+    &__row.is-active &__code {
+        color: var(--pink);
+    }
+
     &__flag {
-        font-size: 1.5rem;
-        line-height: 1;
-        width: 30px;
-        text-align: center;
+        display: inline-flex;
     }
 
     &__meta {
+        flex: 1;
+        min-width: 0;
         display: flex;
         flex-direction: column;
-        min-width: 0;
-        flex: 1;
+        line-height: 1.2;
     }
 
     &__code {
+        color: var(--navy);
         font-weight: 700;
-        font-size: 0.92rem;
-        letter-spacing: 0.02em;
+        transition: color 0.2s;
     }
 
     &__name {
-        font-size: 0.76rem;
-        color: var(--text-2);
-        white-space: nowrap;
         overflow: hidden;
+        color: var(--text-2);
+        font-size: 0.8rem;
+        white-space: nowrap;
         text-overflow: ellipsis;
     }
 
@@ -109,66 +126,57 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        text-align: right;
+        line-height: 1.2;
     }
 
     &__amount {
-        font-weight: 700;
-        font-size: 0.98rem;
+        color: var(--navy);
+        font-weight: 600;
         font-variant-numeric: tabular-nums;
-        color: var(--text-0);
     }
 
     &__rate {
-        font-size: 0.72rem;
         color: var(--text-2);
-        font-variant-numeric: tabular-nums;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
     }
 
     &__remove {
-        flex-shrink: 0;
+        flex: none;
         display: grid;
         place-items: center;
-        width: 22px;
-        height: 22px;
-        margin-left: -2px;
-        border-radius: 50%;
-        border: none;
-        background: transparent;
+        width: 26px;
+        height: 26px;
+        margin-left: 8px;
+        padding: 0;
+        border: 0;
+        border-radius: var(--radius);
+        background: none;
         color: var(--text-2);
-        font-size: 1rem;
-        transition: background 0.15s, color 0.15s, opacity 0.15s;
+        opacity: 0;
+        transition: opacity 0.2s, background-color 0.2s, color 0.2s;
 
         &:hover {
-            background: color-mix(in srgb, var(--down) 18%, transparent);
-            color: var(--down);
+            background: var(--pink-soft);
+            color: var(--pink-ink);
         }
     }
 
-    // Reveal the remove control on hover where hover is available; always show
-    // it on touch devices (no hover state to trigger it).
-    @media (hover: hover) {
-        &__remove { opacity: 0; }
-        &__row:hover &__remove { opacity: 1; }
-    }
-
     &__empty {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        padding: 24px 12px;
+        padding: 24px 0;
         color: var(--text-2);
-        font-size: 0.86rem;
-
-        svg { font-size: 1rem; vertical-align: middle; }
+        font-size: 0.9rem;
+        text-align: center;
     }
 }
 
 @keyframes row-in {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateX(-6px); }
+    to   { opacity: 1; transform: none; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .markets__row { animation: none; }
+@media (hover: none) {
+    .markets__remove {
+        opacity: 1;
+    }
 }

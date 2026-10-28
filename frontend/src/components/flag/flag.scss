@@ -1,14 +1,12 @@
 .flag {
     display: inline-block;
+    flex: none;
+    border-radius: 2px;
     object-fit: cover;
-    border-radius: 5px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-    vertical-align: middle;
-    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 0 0 1px rgba(45, 52, 82, 0.12);
 
     &--emoji {
-        line-height: 1;
         box-shadow: none;
-        border-radius: 0;
+        line-height: 1;
     }
 }

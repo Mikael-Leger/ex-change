@@ -10,7 +10,7 @@ interface FlagProps {
 }
 
 // Renders a country flag image for a currency code. Falls back to the emoji
-// flag (or globe) if the image can't load — so it degrades gracefully offline.
+// flag (or globe) if the image can't load, so it degrades gracefully offline.
 export default function Flag({ code, size = 30 }: FlagProps) {
     const [failed, setFailed] = useState(false);
 

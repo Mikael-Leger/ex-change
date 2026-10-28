@@ -4,12 +4,10 @@ interface InputProps {
     value: string;
     onChange: (value: string) => void;
     symbol: string;
-    code: string;
 }
 
-// Amount field — a large, friendly decimal input with the source currency
-// symbol as a prefix and the code as a suffix chip.
-export default function Input({ value, onChange, symbol, code }: InputProps) {
+// Amount field: a large decimal input with the source currency symbol in front.
+export default function Input({ value, onChange, symbol }: InputProps) {
     const sanitize = (raw: string) => {
         // Allow only digits and a single decimal point.
         const cleaned = raw.replace(/[^\d.]/g, "");
@@ -29,7 +27,6 @@ export default function Input({ value, onChange, symbol, code }: InputProps) {
                     value={value}
                     onChange={(e) => onChange(sanitize(e.target.value))}
                 />
-                <span className="input__code">{code}</span>
             </span>
         </label>
     );

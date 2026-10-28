@@ -57,7 +57,7 @@ export default function CurrencyPicker({ title, codes, selected, onSelect, onClo
                     <input
                         ref={inputRef}
                         type="text"
-                        placeholder="Search currency or code…"
+                        placeholder="Search a currency or code"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                     />
@@ -81,7 +81,7 @@ export default function CurrencyPicker({ title, codes, selected, onSelect, onClo
                         </li>
                     ))}
                     {filtered.length === 0 && (
-                        <li className="picker__empty">No currency matches “{query}”.</li>
+                        <li className="picker__empty">Nothing matches "{query}".</li>
                     )}
                 </ul>
             </div>

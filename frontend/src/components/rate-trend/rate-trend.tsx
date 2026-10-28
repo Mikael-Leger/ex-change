@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { HiArrowTrendingUp, HiArrowTrendingDown } from "react-icons/hi2";
 
+import { formatRate } from "../../utils/format";
+
 import "./rate-trend.scss";
 
 interface RateTrendProps {
@@ -78,12 +80,14 @@ export default function RateTrend({ from, to }: RateTrendProps) {
     return (
         <div className={`rate-trend tone-${tone}`}>
             <div className="rate-trend__head">
-                <span className="rate-trend__label">{from}/{to} trend</span>
-                <div className="rate-trend__ranges">
+                <span className="rate-trend__label">{from} to {to}</span>
+                <div className="rate-trend__ranges" role="tablist" aria-label="Period">
                     {RANGES.map((r) => (
                         <button
                             key={r.days}
                             type="button"
+                            role="tab"
+                            aria-selected={r.days === days}
                             className={r.days === days ? "is-active" : ""}
                             onClick={() => setDays(r.days)}
                         >
@@ -97,7 +101,7 @@ export default function RateTrend({ from, to }: RateTrendProps) {
                 {loading && !path && <div className="rate-trend__skeleton" />}
 
                 {!loading && (!path || !stats) && (
-                    <div className="rate-trend__empty">Trend unavailable for this pair.</div>
+                    <div className="rate-trend__empty">No history for this pair.</div>
                 )}
 
                 {path && stats && (
@@ -112,12 +116,12 @@ export default function RateTrend({ from, to }: RateTrendProps) {
                             >
                                 <defs>
                                     <linearGradient id={`fill-${tone}`} x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="currentColor" stopOpacity="0.32" />
+                                        <stop offset="0%" stopColor="currentColor" stopOpacity="0.18" />
                                         <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
                                     </linearGradient>
                                 </defs>
                                 <path className="rate-trend__area" d={path.area} fill={`url(#fill-${tone})`} />
-                                <path className="rate-trend__line" d={path.line} pathLength={100} />
+                                <path className="rate-trend__line" d={path.line} />
                             </svg>
                             {/* Dot as HTML so the non-uniform SVG stretch doesn't flatten it. */}
                             <span
@@ -126,12 +130,24 @@ export default function RateTrend({ from, to }: RateTrendProps) {
                             />
                         </div>
 
-                        <div className={`rate-trend__change tone-${tone}`}>
-                            {stats.up ? <HiArrowTrendingUp /> : <HiArrowTrendingDown />}
-                            {stats.up ? "+" : ""}
-                            {stats.changePct.toFixed(2)}%
-                            <span className="rate-trend__period">/ {days}d</span>
-                        </div>
+                        <dl className="rate-trend__stats">
+                            <div>
+                                <dt>Change</dt>
+                                <dd className={`tone-${tone}`}>
+                                    {stats.up ? <HiArrowTrendingUp /> : <HiArrowTrendingDown />}
+                                    {stats.up ? "+" : ""}
+                                    {stats.changePct.toFixed(2)}%
+                                </dd>
+                            </div>
+                            <div>
+                                <dt>High</dt>
+                                <dd>{formatRate(stats.max)}</dd>
+                            </div>
+                            <div>
+                                <dt>Low</dt>
+                                <dd>{formatRate(stats.min)}</dd>
+                            </div>
+                        </dl>
                     </>
                 )}
             </div>

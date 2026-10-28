@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { HiArrowsRightLeft } from "react-icons/hi2";
+import { HiArrowsUpDown } from "react-icons/hi2";
 
 import Input from "../input/input";
 import CurrencyButton from "../currency-button/currency-button";
@@ -113,6 +113,11 @@ export default function Convert() {
         setWatchlist((w) => w.filter((c) => c !== code));
     };
 
+    // A tap on a market row makes it the target currency.
+    const pickTarget = (code: string) => {
+        if (code !== from) setTo(code);
+    };
+
     const swap = () => {
         setFrom(to);
         setTo(from);
@@ -129,8 +134,8 @@ export default function Convert() {
         return (
             <div className="card converter converter--state">
                 <p className="converter__error">
-                    Couldn’t load live rates. Make sure the backend is running and the
-                    <code> API_URL</code> / <code>API_KEY</code> are configured.
+                    Couldn't load live rates. Make sure the backend is running and
+                    <code> API_URL</code> and <code>API_KEY</code> are configured.
                 </p>
             </div>
         );
@@ -141,7 +146,7 @@ export default function Convert() {
             <div className="card converter converter--state">
                 <div className="converter__loading">
                     <span className="converter__spinner" />
-                    Fetching live rates…
+                    Fetching live rates
                 </div>
             </div>
         );
@@ -151,17 +156,38 @@ export default function Convert() {
 
     return (
         <div className="converter-shell">
-            <div className="card converter">
-                <div className="converter__selectors">
+            <section className="card converter" aria-label="Converter">
+                <div className="converter__leg">
+                    <Input value={amount} onChange={setAmount} symbol={symbolFor(from)} />
                     <CurrencyButton
                         label="From"
                         code={from}
                         active={picker === "from"}
                         onClick={() => setPicker("from")}
                     />
+                </div>
+
+                <div className="converter__bridge">
                     <button type="button" className="converter__swap" onClick={swap} aria-label="Swap currencies">
-                        <HiArrowsRightLeft />
+                        <HiArrowsUpDown />
                     </button>
+                    <span className="converter__rate-line">
+                        1 {from} = <b>{formatRate(unitRate)}</b> {to}
+                        <span className="converter__rate-sep">/</span>
+                        <span className="is-inverse">
+                            1 {to} = <b>{formatRate(inverseRate)}</b> {from}
+                        </span>
+                    </span>
+                </div>
+
+                <div className="converter__leg converter__leg--out">
+                    <div className="converter__result">
+                        <span className="converter__result-label">Converted amount</span>
+                        <output className="converter__result-value">
+                            <span className="converter__result-symbol">{symbolFor(to)}</span>
+                            {hasResult ? formatMoney(result) : "0.00"}
+                        </output>
+                    </div>
                     <CurrencyButton
                         label="To"
                         code={to}
@@ -170,30 +196,10 @@ export default function Convert() {
                     />
                 </div>
 
-                <Input value={amount} onChange={setAmount} symbol={symbolFor(from)} code={from} />
-
-                <div className="converter__result">
-                    <span className="converter__result-label">Converted amount</span>
-                    <div className="converter__result-value">
-                        <span className="converter__result-symbol">{symbolFor(to)}</span>
-                        <span className="converter__result-number">
-                            {hasResult ? formatMoney(result) : "0.00"}
-                        </span>
-                        <span className="converter__result-code">{to}</span>
-                    </div>
-                    {from && to && (
-                        <div className="converter__rate-line">
-                            <span>1 {from} = {formatRate(unitRate)} {to}</span>
-                            <span className="converter__rate-dot">•</span>
-                            <span>1 {to} = {formatRate(inverseRate)} {from}</span>
-                        </div>
-                    )}
-                </div>
-
                 <RateTrend from={from} to={to} />
-            </div>
+            </section>
 
-            <div className="card converter__markets">
+            <aside className="card converter__markets">
                 <Markets
                     rates={rates}
                     from={from}
@@ -202,8 +208,9 @@ export default function Convert() {
                     watchlist={watchlist}
                     onAdd={() => setPicker("markets")}
                     onRemove={removeFromWatchlist}
+                    onPick={pickTarget}
                 />
-            </div>
+            </aside>
 
             {picker &&
                 createPortal(

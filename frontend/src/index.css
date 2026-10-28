@@ -1,40 +1,40 @@
 :root {
   /* Type */
-  --font-display: "Clash Display", "Satoshi", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Fira Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Fira Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  /* Canvas */
-  --bg-0: #05060f;
-  --bg-1: #0a0e22;
+  /* Ink */
+  --navy: #2d3452;
+  --navy-deep: #1b2038;
+  --text-0: #2d3452;
+  --text-1: #565e7d;
+  --text-2: #8a90a8;
 
-  /* Aurora accents */
-  --aurora-teal: #1fd1a0;
-  --aurora-cyan: #22d3ee;
-  --aurora-violet: #7c5cff;
-  --aurora-rose: #ff5d9e;
-  --aurora-gold: #ffd166;
+  /* Paper */
+  --paper: #ffffff;
+  --page: #faf8f6;
+  --line: #e8e4e6;
+  --line-soft: #f1eeef;
 
-  /* Glass surface */
-  --glass-bg: rgba(255, 255, 255, 0.055);
-  --glass-bg-strong: rgba(255, 255, 255, 0.09);
-  --glass-border: rgba(255, 255, 255, 0.14);
-  --glass-border-soft: rgba(255, 255, 255, 0.08);
-  --glass-highlight: rgba(255, 255, 255, 0.35);
+  /* Sky */
+  --sky-0: #fde8de;
+  --sky-1: #fbd3cf;
+  --sky-2: #f6f0f2;
 
-  /* Text */
-  --text-0: #f3f5ff;
-  --text-1: #b7bee0;
-  --text-2: #7a82ac;
+  /* Accent */
+  --pink: #f0346b;
+  --pink-ink: #d21f56;
+  --pink-soft: #fde6ee;
+  --gold: #e9a23b;
 
   /* Trend */
-  --up: #34e7b0;
-  --down: #ff6b81;
+  --up: #1f9d6b;
+  --down: #e0435a;
 
-  --radius: 28px;
-  --radius-sm: 16px;
-  --shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.85), 0 8px 28px -12px rgba(0, 0, 0, 0.6);
+  --radius: 4px;
+  --shadow: 0 1px 2px rgba(45, 52, 82, 0.06), 0 18px 40px -24px rgba(45, 52, 82, 0.28);
 
-  color-scheme: dark;
+  color-scheme: light;
   font-family: var(--font-body);
   color: var(--text-0);
   font-synthesis: none;
@@ -55,13 +55,15 @@ body {
 }
 
 body {
-  background: var(--bg-0);
+  background: var(--page);
   color: var(--text-0);
   overflow-x: hidden;
 }
 
 #root {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 button {
@@ -74,26 +76,26 @@ input {
   font-family: inherit;
 }
 
+:focus-visible {
+  outline: 2px solid var(--pink);
+  outline-offset: 2px;
+}
+
 ::selection {
-  background: color-mix(in srgb, var(--aurora-violet) 55%, transparent);
+  background: var(--pink);
   color: #fff;
 }
 
-/* Slim, theme-matched scrollbar for picker / markets lists */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
+  background: #d9d4d7;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.26);
-  background-clip: padding-box;
+  background: #bfb8bc;
 }

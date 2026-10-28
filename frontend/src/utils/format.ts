@@ -12,12 +12,12 @@ const rate = new Intl.NumberFormat("en-US", {
 });
 
 export function formatMoney(value: number): string {
-    if (!Number.isFinite(value)) return "—";
+    if (!Number.isFinite(value)) return "-";
     return money.format(value);
 }
 
 export function formatRate(value: number): string {
-    if (!Number.isFinite(value)) return "—";
+    if (!Number.isFinite(value)) return "-";
     if (value !== 0 && Math.abs(value) < 0.01) {
         // Keep enough significant digits for very small rates.
         return value.toPrecision(3);

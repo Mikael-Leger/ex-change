@@ -1,13 +1,13 @@
 # EX·change
 
-A modern, glassmorphism currency converter with live rates, historical trends and a multi-currency markets view.
+A currency converter with live rates, historical trends and a watchlist of currencies.
 
 ## Features
-- **Live conversion** — instant, client-side conversion (no round-trip per keystroke) using rates fetched once on load.
-- **Searchable currency picker** — type-to-filter by code or name, each with a country flag.
-- **Rate trend + sparkline** — 7 / 30 / 90-day historical chart with the period change %, served by `/history`.
-- **Markets panel** — convert the same amount into several popular currencies at once.
-- **Glassmorphism UI** — animated aurora background, frosted-glass cards, fully responsive.
+- **Live conversion**: instant, client-side conversion (no round-trip per keystroke) using rates fetched once on load.
+- **Searchable currency picker**: type-to-filter by code or name, each with a country flag.
+- **Rate trend**: 7 / 30 / 90-day chart with the change, high and low of the period, served by `/history`.
+- **Watchlist**: the same amount in several currencies at once; tap one to make it the target.
+- **Light, paper UI**: a sky and hills header, plain white cards, fully responsive.
 - Selection (from / to / amount) persists in `localStorage`.
 
 # Versions

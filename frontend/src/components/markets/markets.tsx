@@ -14,9 +14,10 @@ interface MarketsProps {
     watchlist: string[];
     onAdd: () => void;
     onRemove: (code: string) => void;
+    onPick: (code: string) => void;
 }
 
-export default function Markets({ rates, from, to, amount, watchlist, onAdd, onRemove }: MarketsProps) {
+export default function Markets({ rates, from, to, amount, watchlist, onAdd, onRemove, onPick }: MarketsProps) {
     if (!from || !rates[from]) return null;
 
     const targets = watchlist.filter((code) => code !== from && rates[code]);
@@ -25,15 +26,15 @@ export default function Markets({ rates, from, to, amount, watchlist, onAdd, onR
     return (
         <section className="markets">
             <header className="markets__head">
-                <span className="markets__title">Markets</span>
-                <div className="markets__head-right">
+                <div>
+                    <h2 className="markets__title">Watchlist</h2>
                     <span className="markets__sub">
-                        {symbolFor(from)}{formatMoney(base)} {from}
+                        {symbolFor(from)}{formatMoney(base)} {from} in
                     </span>
-                    <button type="button" className="markets__add" onClick={onAdd} aria-label="Add currency">
-                        <HiPlus />
-                    </button>
                 </div>
+                <button type="button" className="markets__add" onClick={onAdd}>
+                    <HiPlus /> Add
+                </button>
             </header>
 
             <ul className="markets__list">
@@ -44,19 +45,21 @@ export default function Markets({ rates, from, to, amount, watchlist, onAdd, onR
                         <li
                             key={code}
                             className={`markets__row ${code === to ? "is-active" : ""}`}
-                            style={{ animationDelay: `${i * 45}ms` }}
+                            style={{ animationDelay: `${i * 40}ms` }}
                         >
-                            <span className="markets__flag"><Flag code={code} size={28} /></span>
-                            <span className="markets__meta">
-                                <span className="markets__code">{code}</span>
-                                <span className="markets__name">{nameFor(code)}</span>
-                            </span>
-                            <span className="markets__values">
-                                <span className="markets__amount">
-                                    {symbolFor(code)}{formatMoney(value)}
+                            <button type="button" className="markets__pick" onClick={() => onPick(code)}>
+                                <span className="markets__flag"><Flag code={code} size={26} /></span>
+                                <span className="markets__meta">
+                                    <span className="markets__code">{code}</span>
+                                    <span className="markets__name">{nameFor(code)}</span>
                                 </span>
-                                <span className="markets__rate">1 {from} = {formatRate(unit)}</span>
-                            </span>
+                                <span className="markets__values">
+                                    <span className="markets__amount">
+                                        {symbolFor(code)}{formatMoney(value)}
+                                    </span>
+                                    <span className="markets__rate">@ {formatRate(unit)}</span>
+                                </span>
+                            </button>
                             <button
                                 type="button"
                                 className="markets__remove"
@@ -70,9 +73,7 @@ export default function Markets({ rates, from, to, amount, watchlist, onAdd, onR
                 })}
 
                 {targets.length === 0 && (
-                    <li className="markets__empty">
-                        No currencies yet — tap <HiPlus /> to add one.
-                    </li>
+                    <li className="markets__empty">Your watchlist is empty.</li>
                 )}
             </ul>
         </section>
