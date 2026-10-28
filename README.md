@@ -22,8 +22,8 @@ A currency converter with live rates, historical trends and a watchlist of curre
 - Flask: 3.1.0
 
 # Architecture
-- **Frontend** — a Vite/React SPA. All conversion happens client-side from a single `/rates` fetch.
-- **Backend** — an API-only Flask app at [`backend/index.py`](backend/index.py) (`/rates`, `/convert`, `/history`, `/api`). It does **not** serve the SPA.
+- **Frontend**: a Vite/React SPA. All conversion happens client-side from a single `/rates` fetch.
+- **Backend**: an API-only Flask app at [`backend/index.py`](backend/index.py) (`/rates`, `/convert`, `/history`, `/api`). It does **not** serve the SPA.
 - On **Vercel** ([`vercel.json`](vercel.json)) two builders run: `@vercel/static-build` (root [`package.json`](package.json) → builds the SPA to `frontend/dist`, served from the CDN) and `@vercel/python` (the Flask function). The API paths route to the function; everything else falls back to the SPA's `index.html`.
 
 # Get started
@@ -34,10 +34,10 @@ Create `backend/.env`:
 API_URL=https://api.freecurrencyapi.com
 API_KEY=YOUR-API-KEY
 ```
-Get a free key at https://freecurrencyapi.com. Without it, `/rates` returns a 503 and the UI shows a friendly "not configured" message (the historical sparkline still works — it uses a key-less API).
+Get a free key at https://freecurrencyapi.com. Without it, `/rates` returns a 503 and the UI shows a friendly "not configured" message (the historical sparkline still works, it uses a key-less API).
 
 ## Run locally (hot reload)
-Two terminals — Vite proxies the API routes to Flask on `:5000`:
+Two terminals; Vite proxies the API routes to Flask on `:5000`:
 ```bash
 pip install -r backend/requirements.txt && python backend/index.py   # Flask API on :5000
 cd frontend && npm install && npm run dev                             # SPA on :5173
@@ -45,10 +45,10 @@ cd frontend && npm install && npm run dev                             # SPA on :
 Open http://localhost:5173.
 
 ## API routes (backend)
-- `GET  /rates` — latest rates (freecurrencyapi).
-- `POST /convert` — server-side conversion helper (the SPA also converts client-side).
-- `GET  /history?from=USD&to=EUR&days=30` — historical series for the sparkline (ECB data via frankfurter.app; key-less). Returns `{ "history": [] }` for unsupported pairs so the UI degrades gracefully.
-- `GET  /api` — reports the configured rates API URL.
+- `GET  /rates`: latest rates (freecurrencyapi).
+- `POST /convert`: server-side conversion helper (the SPA also converts client-side).
+- `GET  /history?from=USD&to=EUR&days=30`: historical series for the sparkline (ECB data via frankfurter.app; key-less). Returns `{ "history": [] }` for unsupported pairs so the UI degrades gracefully.
+- `GET  /api`: reports the configured rates API URL.
 
 ## Deploy (Vercel)
 Push to the connected Git repo and Vercel builds from [`vercel.json`](vercel.json). Requirements:
